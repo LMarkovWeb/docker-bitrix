@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  webserver:
+    build:
+      context: ./docker/bin/php74
+    container_name: BX-apache-buster
+    # @see https://docs.docker.com/compose/compose-file/compose-file-v3/#restart
+    restart: "no"
+    ports:
+      - 80:80
+    volumes:
+      # site files
+      - ./www:/var/www/html
+      # Для настройки в php.ini "session.save_path ="
+      - ./docker/tmp/php_sessions/www:/tmp/php_sessions/www
+      # php.ini config
+      - ./docker/config/php/php.ini:/usr/local/etc/php/php.ini
+
+  # MySQL
+  database:
+    build:
+      context: ./docker/bin/mysql
+    container_name: BX-mysql
+    restart: "no"
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "tiger"
+      MYSQL_DATABASE: "docker"
+      MYSQL_USER: "docker"
+      MYSQL_PASSWORD: "docker"
