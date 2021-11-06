@@ -1,32 +1,71 @@
-version: "3"
+version: "2"
 
 services:
-  webserver:
+  nginx:
     build:
-      context: ./docker/bin/php74
-    container_name: BX-apache-buster
-    # @see https://docs.docker.com/compose/compose-file/compose-file-v3/#restart
-    restart: "no"
+      context: ./nginx
+      args:
+        user_uid: "$user_uid"
+        user_gid: "$user_gid"
+    container_name: nginx
+    depends_on:
+      - source
+      - php-fpm
+    volumes_from:
+      - source
     ports:
-      - 80:80
-    volumes:
-      # site files
-      - ./www:/var/www/html
-      # Для настройки в php.ini "session.save_path ="
-      - ./docker/tmp/php_sessions/www:/tmp/php_sessions/www
-      # php.ini config
-      - ./docker/config/php/php.ini:/usr/local/etc/php/php.ini
-
-  # MySQL
-  database:
+      - "80:80"
+      - "443:443"
+    networks:
+      - network-default
+    restart: "no"
+  php-fpm:
     build:
-      context: ./docker/bin/mysql
-    container_name: BX-mysql
+      context: ./php-fpm
+      args:
+        user_uid: "$user_uid"
+        user_gid: "$user_gid"
+    container_name: php-fpm
+    expose:
+      - "9000"
+    volumes_from:
+      - source
+    links:
+      - mysql
+    networks:
+      - network-default
     restart: "no"
-    ports:
-      - 3306:3306
+  mysql:
+    build: ./mysql
+    container_name: mysql
+    volumes_from:
+      - source
+    expose:
+      - "3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "tiger"
-      MYSQL_DATABASE: "docker"
-      MYSQL_USER: "docker"
-      MYSQL_PASSWORD: "docker"
+      MYSQL_DATABASE: project_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: mysql_pass
+      MYSQL_ROOT_PASSWORD: mysql_root_pass
+    networks:
+      - network-default
+    restart: "no"
+
+  source:
+    image: alpine
+    container_name: source
+    volumes:
+      - ./data/logs/mysql:/var/log/mysql
+      - ./data/logs/nginx:/var/log/nginx
+      - ./data/mysql:/var/lib/mysql
+      - ./data/php_sessions:/tmp/php_sessions
+      - ./www:/var/www
+    networks:
+      - network-default
+networks:
+  network-default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.255.0/24

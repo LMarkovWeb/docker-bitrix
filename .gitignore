@@ -1,8 +1,7 @@
+.env
+www
+data
+
+.vscode
+.idea
 .DS_Store
-/.env
-/.vscode
-/.idea
-/docker/logs/*
-/www/**
-/examples/
-README.md
