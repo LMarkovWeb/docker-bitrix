@@ -61,6 +61,7 @@ services:
       - ./data/mysql:/var/lib/mysql
       - ./data/php_sessions:/tmp/php_sessions
       - ./www:/var/www
+      - ./data/.msmtprc:/var/.msmtprc
     networks:
       - backend
 networks:

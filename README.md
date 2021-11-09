@@ -25,8 +25,7 @@ mysql/<mysql_ver>/Dockerfile
 nginx/Dockerfile  
 php-fpm/<php_ver>/Dockerfile
 
-Папка data. После запуска окружения будет содержать
-подпапки logs, mysql, php_sessions
+Папка data. Содержит подпапки logs, mysql, php_sessions
 
 В папке www будут файлы проекта на Битриксе.
 
