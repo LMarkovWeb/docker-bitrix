@@ -1,6 +1,8 @@
 .env
 www
-data/logs/*
+data/logs/msmtp/*
+data/logs/mysql/*
+data/logs/nginx/*
 data/mysql/*
 data/php_sessions/*
 data/.msmtprc

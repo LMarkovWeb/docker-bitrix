@@ -58,6 +58,7 @@ services:
     volumes:
       - ./data/logs/mysql:/var/log/mysql
       - ./data/logs/nginx:/var/log/nginx
+      - ./data/logs/msmtp/:/var/log/msmtp
       - ./data/mysql:/var/lib/mysql
       - ./data/php_sessions:/tmp/php_sessions
       - ./www:/var/www
