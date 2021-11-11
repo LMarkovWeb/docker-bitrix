@@ -27,7 +27,7 @@ RUN docker-php-ext-install sockets
 
 RUN apt-get update -q -y && apt-get install -q -y --no-install-recommends  msmtp
 
-RUN apt-get update -q -y && apt-get install -q -y mc telnet
+RUN apt-get update -q -y && apt-get install -q -y mc telnet nano
 
 COPY php-overides_local.ini $PHP_INI_DIR/conf.d/php-overides.ini
 

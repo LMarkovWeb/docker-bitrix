@@ -35,20 +35,7 @@ WORKDIR "/var/www"
 
 RUN apt-get update -q -y && apt-get install -q -y --no-install-recommends  msmtp
 
-# RUN echo "defaults" > /etc/msmtprc \
-#     && echo "account default" >> /etc/msmtprc \
-#     && echo "logfile /var/www/msmtp.log" >> /etc/msmtprc \
-#     && echo "host $SMTP_MAILHUB" >> /etc/msmtprc \
-#     && echo "port $SMTP_PORT" >> /etc/msmtprc \
-#     && echo "from $SMTP_FROM" >> /etc/msmtprc \
-#     && echo "auth on" >> /etc/msmtprc \
-#     && echo "tls on" >> /etc/msmtprc \
-#     && echo "tls_starttls off" >> /etc/msmtprc \
-#     && echo "tls_certcheck off" >> /etc/msmtprc \
-#     && echo "user $SMTP_USER" >> /etc/msmtprc \
-#     && echo "password $SMTP_PASS" >> /etc/msmtprc
-
-RUN apt-get update -q -y && apt-get install -q -y mc telnet
+RUN apt-get update -q -y && apt-get install -q -y mc telnet nano
 
 COPY php-overides_local.ini $PHP_INI_DIR/conf.d/php-overides.ini
 
