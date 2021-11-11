@@ -5,6 +5,12 @@ ARG user_gid
 RUN usermod -u $user_uid www-data
 RUN groupmod -g $user_gid www-data
 
+ARG SMTP_MAILHUB
+ARG SMTP_USER
+ARG SMTP_PASS
+ARG SMTP_PORT
+ARG SMTP_FROM
+
 RUN apt-get update -q -y \
     && apt-get install -q -y --no-install-recommends \
     unzip \
@@ -29,8 +35,7 @@ WORKDIR "/var/www"
 
 RUN apt-get update -q -y && apt-get install -q -y --no-install-recommends  msmtp
 
-RUN apt-get update -q -y && apt-get install -q -y mc
-RUN apt-get update -q -y && apt-get install -q -y telnet
+RUN apt-get update -q -y && apt-get install -q -y mc telnet nano
 
 COPY php-overides_local.ini $PHP_INI_DIR/conf.d/php-overides.ini
 

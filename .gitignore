@@ -1,6 +1,11 @@
 .env
 www
-data
+data/logs/msmtp/*
+data/logs/mysql/*
+data/logs/nginx/*
+data/mysql/*
+data/php_sessions/*
+data/.msmtprc
 
 .vscode
 .idea

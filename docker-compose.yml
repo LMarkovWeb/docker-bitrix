@@ -7,7 +7,7 @@ services:
       args:
         user_uid: "$user_uid"
         user_gid: "$user_gid"
-    container_name: nginx
+    container_name: "${COMPOSE_PROJECT_NAME}-nginx"
     depends_on:
       - source
       - php-fpm
@@ -17,15 +17,16 @@ services:
       - "80:80"
       - "443:443"
     networks:
-      - network-default
+      - backend
     restart: "no"
+
   php-fpm:
     build:
-      context: ./php-fpm
+      context: ./php-fpm/${PHPVERSION}
       args:
         user_uid: "$user_uid"
         user_gid: "$user_gid"
-    container_name: php-fpm
+    container_name: "${COMPOSE_PROJECT_NAME}-fpm-${PHPVERSION}"
     expose:
       - "9000"
     volumes_from:
@@ -33,22 +34,22 @@ services:
     links:
       - mysql
     networks:
-      - network-default
+      - backend
     restart: "no"
   mysql:
-    build: ./mysql
-    container_name: mysql
+    build: ./mysql/${DATABASE}
+    container_name: "${COMPOSE_PROJECT_NAME}-${DATABASE}"
     volumes_from:
       - source
     expose:
       - "3306"
     environment:
-      MYSQL_DATABASE: project_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: mysql_pass
-      MYSQL_ROOT_PASSWORD: mysql_root_pass
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     networks:
-      - network-default
+      - backend
     restart: "no"
 
   source:
@@ -57,13 +58,15 @@ services:
     volumes:
       - ./data/logs/mysql:/var/log/mysql
       - ./data/logs/nginx:/var/log/nginx
+      - ./data/logs/msmtp/:/var/log/msmtp
       - ./data/mysql:/var/lib/mysql
       - ./data/php_sessions:/tmp/php_sessions
       - ./www:/var/www
+      - ./data/.msmtprc:/var/.msmtprc
     networks:
-      - network-default
+      - backend
 networks:
-  network-default:
+  backend:
     driver: bridge
     ipam:
       driver: default
